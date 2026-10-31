@@ -90,7 +90,8 @@ const Navbar = () => {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
-  console.log(user);
+
+
 
   const isAuthenticated = user;
 
@@ -133,7 +134,7 @@ const Navbar = () => {
                 <Link
                   href={href}
                   className={cn(
-                    "flex items-center gap-1.5 text-sm font-semibold transition-colors px-4 py-2.5 rounded-xl",
+                    "flex items-center gap-1.5 font-semibold transition-colors px-4 py-2.5 rounded-xl md:text-[7px] ",
                     active
                       ? "bg-[#1a3a2a] text-white"
                       : "text-muted-foreground hover:bg-black/5 hover:text-foreground",
@@ -167,9 +168,9 @@ const Navbar = () => {
                 render={
                   <button className="rounded-full cursor-pointer ring-2 ring-[#1a3a2a]/20 ring-offset-2 hover:ring-[#1a3a2a]/50 transition-all duration-200 focus:outline-none">
                     <Avatar className="size-9">
-                      <AvatarImage src={user?.image ?? ""} />
+                      <AvatarImage referrerPolicy={`no-referrer`} src={user?.image as string} />
                       <AvatarFallback className="bg-[#1a3a2a] text-amber-400 font-bold text-sm">
-                        {user?.name?.charAt(0).toUpperCase() ?? "U"}
+                        {user?.name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </button>

@@ -26,6 +26,15 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
 
   const allValid = PASSWORD_RULES.every((r) => r.test(password));
+    const handleGooglRegister = async () => {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/?login=google",
+      });
+      if (error) {
+        toast.error(error.message ?? "Google sign-in failed");
+      }
+    };
 
    const hanldeRegister = async(e:React.SyntheticEvent<HTMLFormElement>) =>{
              e.preventDefault();
@@ -112,15 +121,15 @@ export default function RegisterPage() {
           {/* Photo URL */}
           <div className="flex flex-col gap-1.5">
             <Label
-              htmlFor="photoUrl"
+              htmlFor="image"
               className="text-[0.7rem] font-bold uppercase tracking-widest text-foreground"
             >
               Photo URL <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="photoUrl"
+              id="image"
               type="url"
-              name="photoUrl"
+              name="image"
               required
               placeholder="https://images.unsplash.com/..."
               className="h-11 rounded-xl px-4 text-sm"
@@ -212,6 +221,7 @@ export default function RegisterPage() {
 
         {/* ── Google SSO ── */}
         <Button
+        onClick={handleGooglRegister}
           variant="outline"
           className="h-11 w-full rounded-xl border-border text-sm font-medium"
         >

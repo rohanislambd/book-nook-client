@@ -15,28 +15,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
-  const handleLogin = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const user = Object.fromEntries(formData.entries()) as {
-      email: string;
-      password: string;
-    };
-
-    const { data, error } = await authClient.signIn.email({
-      ...user,
+  const handleGoogleLogin = async () => {
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/?login=google",
     });
     if (error) {
-      toast.error(error.message ?? "Something went wrong");
+      toast.error(error.message ?? "Google sign-in failed");
     }
-    if (data) {
-      toast.success("Login Successful");
-      fetchOptions: {
-        onSuccess:{
-          router.push("/"); // redirect to login page
-        };
-      }
-    }
+  };
+
+  const handleLogin = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     const hasUpper = /[A-Z]/.test(password);
     const hasLower = /[a-z]/.test(password);
@@ -45,6 +35,27 @@ export default function LoginPage() {
         "Password must contain at least one uppercase (A–Z) and one lowercase (a–z) letter.",
       );
       return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    const user = Object.fromEntries(formData.entries()) as {
+      email: string;
+      password: string;
+    };
+
+    const { data, error } = await authClient.signIn.email({
+      ...user,
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    });
+    if (error) {
+      toast.error(error.message ?? "Something went wrong");
+    }
+    if (data) {
+      toast.success("Login Successful");
     }
   };
 
@@ -168,6 +179,8 @@ export default function LoginPage() {
         {/* ── Google SSO ── */}
         <Button
           variant="outline"
+          type="button"
+          onClick={handleGoogleLogin}
           className="h-11 w-full rounded-xl border-border text-sm font-medium"
         >
           {/* Google G logo */}
