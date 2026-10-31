@@ -99,7 +99,7 @@ const Navbar = () => {
                 </ul>
 
                 {/* ── Desktop auth buttons (md+) ── */}
-                <div className="hidden md:flex items-center gap-2 shrink-0">
+                <div className="hidden flex-col md:flex items-center gap-2 shrink-0">
                     {isAuthenticated ? (
                         
                         <Button variant="outline" size="sm" className="rounded-xl px-5 border-red-500 text-red-500 font-semibold hover:bg-red-50">
@@ -107,17 +107,19 @@ const Navbar = () => {
                         </Button>
                     ) : (
                       
-                        <>
-                            <Button variant="outline"  className="rounded-xl px-5 py-4 border-[#1a3a2a] text-[#1a3a2a] font-semibold hover:bg-[#1a3a2a]/5">
+                        <div className='flex gap-3'>
+                            <Link href="/login">
+                                <Button variant="outline"  className="rounded-xl px-5 py-4  border-[#1a3a2a] text-[#1a3a2a] font-semibold hover:bg-[#1a3a2a]/5">
                                 Login
                             </Button>
+                            </Link>
                             <Button
                                 
-                                className="rounded-xl bg-[#1a3a2a] px-5 py-4 text-white font-semibold hover:bg-[#1a3a2a]/90"
+                                className="rounded-xl bg-[#1a3a2a] px-5 py-4  text-white font-semibold hover:bg-[#1a3a2a]/90"
                             >
                                 Register
                             </Button>
-                        </>
+                        </div>
                     )}
                 </div>
 
@@ -137,7 +139,7 @@ const Navbar = () => {
 
             {/* ── Mobile Dropdown Menu (< md) ── */}
             {mobileOpen && (
-                <div className="md:hidden border-t border-border bg-[#FAF8F5] px-6 py-4 pb-6 shadow-sm">
+                <div className="md:hidden border-t border-border bg-[#FFFFFF] px-6 py-4 pb-6 shadow-sm">
                     <nav className="flex flex-col space-y-2">
                         {visibleLinks.map(({ href, label, count }) => {
                             const active = pathname === href;
@@ -170,21 +172,23 @@ const Navbar = () => {
                                 <LogOut className="size-4 mr-2" /> Logout
                             </Button>
                         ) : (
-                            <>
-                                <Button
+                            <div className='flex flex-col w-full gap-3'>
+                               <Link href="/login">
+                                   <Button
                                     variant="outline"
-                                    className="flex-1 rounded-xl border-[#1a3a2a] text-[#1a3a2a] font-semibold hover:bg-[#1a3a2a]/5"
+                                    className="flex-1 rounded-xl border-[#1a3a2a] text-[#1a3a2a] font-semibold hover:bg-[#1a3a2a]/5 w-full"
                                     onClick={closeMobile}
                                 >
                                     Login
                                 </Button>
+                               </Link>
                                 <Button
-                                    className="flex-1 rounded-xl bg-[#1a3a2a] text-white font-semibold hover:bg-[#1a3a2a]/90"
+                                    className="flex-1 rounded-xl bg-[#1a3a2a] text-white font-semibold hover:bg-[#1a3a2a]/90 w-full py-2"
                                     onClick={closeMobile}
                                 >
                                     Register
                                 </Button>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
