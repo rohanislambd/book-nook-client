@@ -6,11 +6,47 @@ import { LogIn, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const router = useRouter();
+  const handleLogin = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const user = Object.fromEntries(formData.entries()) as {
+      email: string;
+      password: string;
+    };
+
+    const { data, error } = await authClient.signIn.email({
+      ...user,
+    });
+    if (error) {
+      toast.error(error.message ?? "Something went wrong");
+    }
+    if (data) {
+      toast.success("Login Successful");
+      fetchOptions: {
+        onSuccess:{
+          router.push("/"); // redirect to login page
+        };
+      }
+    }
+
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    if (!hasUpper || !hasLower) {
+      setPasswordError(
+        "Password must contain at least one uppercase (A–Z) and one lowercase (a–z) letter.",
+      );
+      return;
+    }
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F5F3EE] px-4 py-12">
@@ -33,21 +69,7 @@ export default function LoginPage() {
         </div>
 
         {/* ── Form ── */}
-        <form
-          className="mt-7 flex flex-col gap-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-            const hasUpper = /[A-Z]/.test(password);
-            const hasLower = /[a-z]/.test(password);
-            if (!hasUpper || !hasLower) {
-              setPasswordError(
-                'Password must contain at least one uppercase (A–Z) and one lowercase (a–z) letter.'
-              );
-              return;
-            }
-            // TODO: submit
-          }}
-        >
+        <form className="mt-7 flex flex-col gap-5" onSubmit={handleLogin}>
           {/* Email */}
           <div className="flex flex-col gap-1.5">
             <Label
@@ -93,10 +115,10 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  if (passwordError) setPasswordError('');
+                  if (passwordError) setPasswordError("");
                 }}
                 aria-invalid={!!passwordError}
-                aria-describedby={passwordError ? 'password-error' : undefined}
+                aria-describedby={passwordError ? "password-error" : undefined}
                 className="h-11 rounded-xl px-4 pr-11 text-sm"
               />
               <button
@@ -115,7 +137,11 @@ export default function LoginPage() {
 
             {/* Validation error */}
             {passwordError && (
-              <p id="password-error" role="alert" className="text-xs text-red-500 mt-0.5">
+              <p
+                id="password-error"
+                role="alert"
+                className="text-xs text-red-500 mt-0.5"
+              >
                 {passwordError}
               </p>
             )}

@@ -113,12 +113,14 @@ const Navbar = () => {
                                 Login
                             </Button>
                             </Link>
-                            <Button
+                            <Link href="/register">
+                              <Button
                                 
                                 className="rounded-xl bg-[#1a3a2a] px-5 py-4  text-white font-semibold hover:bg-[#1a3a2a]/90"
                             >
                                 Register
                             </Button>
+                            </Link>
                         </div>
                     )}
                 </div>
@@ -182,12 +184,14 @@ const Navbar = () => {
                                     Login
                                 </Button>
                                </Link>
-                                <Button
+                                <Link href="/register">
+                                  <Button
                                     className="flex-1 rounded-xl bg-[#1a3a2a] text-white font-semibold hover:bg-[#1a3a2a]/90 w-full py-2"
                                     onClick={closeMobile}
                                 >
                                     Register
                                 </Button>
+                                </Link>
                             </div>
                         )}
                     </div>
