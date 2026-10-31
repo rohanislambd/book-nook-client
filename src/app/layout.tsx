@@ -28,7 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col font-sans">
         <Navbar />
-        {children}
+        <main className="bg-[#FAF8F5]">
+          {children}
+        </main>
       </body>
     </html>
   );
