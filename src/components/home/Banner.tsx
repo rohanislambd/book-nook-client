@@ -160,16 +160,18 @@ export default function Banner() {
                   {/* CTA buttons */}
                   <div className="flex flex-wrap items-center gap-3">
                     <Link
-                      href="/all-books"
+                      href="/books"
                       className="inline-flex items-center gap-2 rounded-full bg-[#d97f2a] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#c5711f] sm:px-6 sm:py-3"
                     >
                       Browse Books
                       <ChevronRight className="h-4 w-4" />
                     </Link>
-                    <button className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6 sm:py-3">
+                    <Link href="/add-book">
+                       <button className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6 sm:py-3">
                       <PlusCircle className="h-4 w-4 text-[#e09a40]" />
                       Contribute a Book
                     </button>
+                    </Link>
                   </div>
                 </div>
 

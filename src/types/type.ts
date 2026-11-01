@@ -15,6 +15,8 @@ export interface Book {
   coverImage: string;
   description: string;
   contributor?: Contributor;
+  userName?: string;
+  userEmail?: string;
   createdAt?: string | Date;
 }
 
