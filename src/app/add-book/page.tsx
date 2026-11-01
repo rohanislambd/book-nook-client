@@ -8,13 +8,15 @@ import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useBooks } from "@/context/BookContext";
 
-const CATEGORIES = ["Fiction", "Science", "History", "Kids", "Other"];
+const CATEGORIES = ["Fiction", "Science", "History", "Kids", "Others"];
 
 export default function AddBookPage() {
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const router = useRouter();
+  const { refreshBooks } = useBooks();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,8 +64,12 @@ export default function AddBookPage() {
       }
 
       toast.success("Book added successfully!");
+      await refreshBooks();
       (e.target as HTMLFormElement).reset();
-      router.push("/my-book");
+      setTimeout(()=>{
+        router.push("/my-book");
+      },1000)
+      
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {

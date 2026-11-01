@@ -1,0 +1,27 @@
+import type React from "react";
+
+export interface Contributor {
+  name: string;
+  email?: string;
+}
+
+export interface Book {
+  _id: string;
+  title: string;
+  author: string;
+  category: string;
+  totalCopies: number;
+  availableCopies: number;
+  coverImage: string;
+  description: string;
+  contributor?: Contributor;
+  createdAt?: string | Date;
+}
+
+export interface BookContextType {
+  books: Book[];
+  allBooksCount: number;
+  loading: boolean;
+  setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
+  refreshBooks: () => Promise<void>;
+}

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import Navbar from "@/components/shared/Navbar";
 import "./globals.css";
-import  { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import { BookProvider } from "@/context/BookContext";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -28,13 +29,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fraunces.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <Toaster/>
+        <Toaster />
 
-        <Navbar />
+        <BookProvider>
+          <Navbar />
 
-        <main className="bg-[#FAF8F5]">
-          {children}
-        </main>
+          <main className="bg-[#FAF8F5]">
+            {children}
+          </main>
+        </BookProvider>
       </body>
     </html>
   );

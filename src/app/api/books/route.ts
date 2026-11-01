@@ -4,6 +4,19 @@ import { MongoClient } from "mongodb";
 const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db("book-nook");
 
+export async function GET() {
+  try {
+    const books = await db.collection("books").find({}).toArray();
+    return NextResponse.json(books);
+  } catch (error) {
+    console.error("Get books error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch books." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

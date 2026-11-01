@@ -28,6 +28,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import toast from "react-hot-toast";
+import { useBooks } from "@/context/BookContext";
 
 /* ─────────────────── nav link definitions ─────────────────── */
 
@@ -38,31 +39,6 @@ type NavLink = {
   count?: number;
   requireAuth?: boolean;
 };
-
-const NAV_LINKS: NavLink[] = [
-  { href: "/", label: "Home", icon: Compass },
-  { href: "/books", label: "All Books", icon: LibraryBig, count: 10 },
-  {
-    href: "/add-book",
-    label: "Add Book",
-    icon: CirclePlus,
-    requireAuth: true,
-  },
-  {
-    href: "/my-book",
-    label: "My Book",
-    icon: BookBookmark,
-    count: 10,
-    requireAuth: true,
-  },
-  {
-    href: "/my-borrows",
-    label: "My Borows",
-    icon: SaveCheck,
-    count: 10,
-    requireAuth: true,
-  },
-];
 
 /* ─────────────────── Logo ─────────────────── */
 
@@ -88,21 +64,48 @@ const Navbar = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const user = session?.user;
 
 
 
   const isAuthenticated = user;
+  const { allBooksCount } = useBooks();
 
   const closeMobile = () => setMobileOpen(false);
 
-  // 💡 Derive counts from NAV_LINKS (single source of truth)
-  const myBookCount    = NAV_LINKS.find((l) => l.href === "/my-book")?.count;
-  const myBorrowsCount = NAV_LINKS.find((l) => l.href === "/my-borrows")?.count;
+  // 💡 Define nav links with dynamic count from context
+  const navLinks: NavLink[] = [
+    { href: "/", label: "Home", icon: Compass },
+    { href: "/books", label: "All Books", icon: LibraryBig, count: allBooksCount },
+    {
+      href: "/add-book",
+      label: "Add Book",
+      icon: CirclePlus,
+      requireAuth: true,
+    },
+    {
+      href: "/my-book",
+      label: "My Book",
+      icon: BookBookmark,
+      count: 10,
+      requireAuth: true,
+    },
+    {
+      href: "/my-borrows",
+      label: "My Borows",
+      icon: SaveCheck,
+      count: 10,
+      requireAuth: true,
+    },
+  ];
+
+  // 💡 Derive counts from navLinks (single source of truth)
+  const myBookCount    = navLinks.find((l) => l.href === "/my-book")?.count;
+  const myBorrowsCount = navLinks.find((l) => l.href === "/my-borrows")?.count;
 
   // 💡 Session filter
-  const visibleLinks = NAV_LINKS.filter((link) => {
+  const visibleLinks = navLinks.filter((link) => {
     if (link.requireAuth && !isAuthenticated) return false;
     return true;
   });
