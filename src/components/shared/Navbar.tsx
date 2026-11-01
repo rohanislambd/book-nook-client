@@ -126,7 +126,7 @@ const Navbar = () => {
         <Logo />
 
         {/* ── Desktop nav links (md+) ── */}
-        <ul className="hidden md:flex items-center gap-2">
+        <ul className="hidden md:flex items-center gap-1 xl:gap-2">
           {visibleLinks.map(({ href, label, icon: Icon, count }) => {
             const active = pathname === href;
             return (
@@ -134,13 +134,13 @@ const Navbar = () => {
                 <Link
                   href={href}
                   className={cn(
-                    "flex items-center gap-1.5 font-semibold transition-colors px-4 py-2.5 rounded-xl md:text-[7px] ",
+                    "flex items-center gap-1 whitespace-nowrap font-semibold transition-colors px-2 xl:px-3 py-2 rounded-xl text-sm ",
                     active
                       ? "bg-[#1a3a2a] text-white"
                       : "text-muted-foreground hover:bg-black/5 hover:text-foreground",
                   )}
                 >
-                  <Icon className="size-4" />
+                  <Icon className="size-5" />
                   {label}
                   {count !== undefined && (
                     <Badge
@@ -166,13 +166,21 @@ const Navbar = () => {
             <Popover>
               <PopoverTrigger
                 render={
-                  <button className="rounded-full cursor-pointer ring-2 ring-[#1a3a2a]/20 ring-offset-2 hover:ring-[#1a3a2a]/50 transition-all duration-200 focus:outline-none">
-                    <Avatar className="size-9">
-                      <AvatarImage referrerPolicy={`no-referrer`} src={user?.image as string} />
+                  <button className="flex items-center gap-3 rounded-2xl border border-border bg-white px-3 py-2 shadow-sm hover:shadow-md hover:border-[#1a3a2a]/30 transition-all duration-200 cursor-pointer focus:outline-none group">
+                    <Avatar className="size-9 ring-2 ring-[#1a3a2a]/20 ring-offset-1 group-hover:ring-[#1a3a2a]/40 transition-all duration-200">
+                      <AvatarImage referrerPolicy="no-referrer" src={user?.image as string} />
                       <AvatarFallback className="bg-[#1a3a2a] text-amber-400 font-bold text-sm">
                         {user?.name?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
+                    <div className="flex flex-col items-start leading-tight">
+                      <span className="text-sm font-semibold text-foreground truncate max-w-[120px]">
+                        {user?.name}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground font-medium">
+                        Member
+                      </span>
+                    </div>
                   </button>
                 }
               />
@@ -276,7 +284,7 @@ const Navbar = () => {
             variant="outline"
             size="icon"
             aria-label="Toggle menu"
-            className="rounded-xl border-border bg-white"
+            className="rounded-xl border border-[#1a3a2a]/30 bg-white text-[#1a3a2a]"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? (

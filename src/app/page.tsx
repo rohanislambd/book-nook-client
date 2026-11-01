@@ -1,10 +1,11 @@
 import GoogleLoginToast from "@/components/shared/google-login-toast";
+import Banner from "@/components/home/Banner";
 
 export default function Home() {
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
+    <main>
       <GoogleLoginToast />
-      <h1 className="font-heading text-4xl font-bold">Welcome to BookNook</h1>
+      <Banner />
     </main>
   );
 }
