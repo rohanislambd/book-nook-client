@@ -70,7 +70,25 @@ const Navbar = () => {
 
 
   const isAuthenticated = user;
-  const { allBooksCount } = useBooks();
+  const { allBooksCount, books } = useBooks();
+
+  // Books contributed by current user (matching /my-book page)
+
+  type TBook = {
+  userEmail?: string;
+  contributor?: {
+    email?: string;
+  };
+};
+
+  const myBooksCount = books.filter(
+    (b: TBook) =>
+      Boolean(
+        user?.email &&
+          (b.userEmail?.toLowerCase() === user.email.toLowerCase() ||
+            b.contributor?.email?.toLowerCase() === user.email.toLowerCase())
+      )
+  ).length;
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -88,14 +106,14 @@ const Navbar = () => {
       href: "/my-book",
       label: "My Book",
       icon: BookBookmark,
-      count: 10,
+      count: myBooksCount,
       requireAuth: true,
     },
     {
       href: "/my-borrows",
       label: "My Borows",
       icon: SaveCheck,
-      count: 10,
+      count: 100,
       requireAuth: true,
     },
   ];
