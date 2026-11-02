@@ -161,7 +161,7 @@ const handleBorrowClick = async () => {
         return;
       }
       setIsAlreadyBorrowed(true);
-      toast.success("Book borrowed successfully!");
+      toast.success(`Book borrowed successfully! Automatically returned by ${returnDate}.`);
       refreshBorrows();
       refreshBooks();
 

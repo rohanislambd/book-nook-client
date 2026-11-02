@@ -100,7 +100,7 @@ export default function Banner() {
         }}
       >
         {/* Top orange progress bar */}
-        <div className="absolute top-0 left-0 right-0 z-30 h-1 bg-white/10">
+        <div className="absolute top-0 left-0 right-0 z-10 h-1 bg-white/10">
           <div
             className="h-full bg-[#e09a40] transition-all duration-75 ease-linear"
             style={{ width: `${progress}%` }}

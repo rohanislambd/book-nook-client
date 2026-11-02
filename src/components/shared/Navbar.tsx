@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import toast from "react-hot-toast";
 import { useBooks } from "@/context/BookContext";
+import ProfileDialog from "../profile/ProfileDialog";
 
 /* ─────────────────── nav link definitions ─────────────────── */
 
@@ -139,7 +140,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="w-full border-b border-border bg-[#FAF8F5]">
+    <header className="w-full border-b border-border bg-[#FAF8F5] sticky top-0 z-50">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 relative ">
         {/* Logo — always visible */}
         <Logo />
@@ -223,13 +224,13 @@ const Navbar = () => {
 
                 {/* Menu Items */}
                 <nav className="flex flex-col py-2">
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-black/5 transition-colors"
+                  <div className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-black/5 transition-colors"
                   >
                     <UserRound className="size-4 text-muted-foreground" />
-                    My Profile
-                  </Link>
+
+                    {/* Profile dialog */}
+                     <ProfileDialog myBookCount={myBookCount}/>
+                  </div>
 
                   <Link
                     href="/my-book"
@@ -296,9 +297,37 @@ const Navbar = () => {
         </div>
 
 
+         
+        {/* ── Mobile profile & hamburger (< md) ── */}
+        <div className="flex items-center gap-2.5 md:hidden z-10">
+          {isAuthenticated && (
+            <ProfileDialog
+              myBookCount={myBookCount}
+              trigger={
+                <button
+                  type="button"
+                  className="flex items-center justify-center rounded-full transition-all focus:outline-none cursor-pointer"
+                  aria-label="Open profile"
+                >
+                  <Avatar className="size-9 ring-2 ring-stone-300/80 hover:ring-[#1a3a2a]/40 transition-all">
+                    <AvatarImage
+                      referrerPolicy="no-referrer"
+                      src={
+                        user?.image ||
+                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop"
+                      }
+                      alt={user?.name || "Profile"}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="bg-[#1a3a2a] text-amber-400 font-bold text-xs">
+                      {user?.name?.charAt(0).toUpperCase() ?? "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              }
+            />
+          )}
 
-        {/* ── Mobile hamburger / Close button (< md) ── */}
-        <div className="flex md:hidden">
           <Button
             variant="outline"
             size="icon"
@@ -317,7 +346,7 @@ const Navbar = () => {
 
       {/* ── Mobile Dropdown Menu (< md) ── */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-[#FFFFFF] px-6 py-4 pb-6 shadow-sm">
+        <div className=" md:hidden  border-t border-border bg-[#FFFFFF] px-6 py-4 pb-6 shadow-sm  ">
           <nav className="flex flex-col space-y-2">
             {visibleLinks.map(({ href, label, count }) => {
               const active = pathname === href;
