@@ -5,6 +5,7 @@ import React from "react";
 import {  PlusCircle, Pencil, Trash2 } from "lucide-react";
 import { Book } from "@/types/type";
 import MyBookEditDialog from "@/components/mybooks/MyBookEditDialog";
+import MyBookDeleteDialog from "@/components/mybooks/MyBookDeleteDialog";
 
 
 
@@ -176,13 +177,8 @@ try {
                           {/* edit my book  */}
                             <MyBookEditDialog book={book}/>
 
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50/50 px-3 py-1.5 text-xs font-semibold text-red-600 shadow-2xs transition-colors hover:bg-red-100/70 hover:text-red-700 cursor-pointer"
-                          >
-                            <Trash2 className="size-3.5 text-red-500" />
-                            <span>Delete</span>
-                          </button>
+                           {/* delete my book */}
+                           <MyBookDeleteDialog  book={book}/>
                         </div>
                       </td>
                     </tr>
