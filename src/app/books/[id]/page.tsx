@@ -3,6 +3,7 @@ import { ChevronLeft } from "lucide-react";
 import { Book } from "@/types/type";
 import BorrowBookDialog from "@/components/my borrow/BorrowBookDialog";
 import Image from "next/image";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 interface BookDetailProps {
   params: Promise<{
@@ -14,13 +15,18 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
   const { id } = await params;
 
   let book: Book | null = null;
-
+  const jwtToken = await getTokenFromServer();
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL
       ? `${process.env.NEXT_PUBLIC_API_URL}/books/${id}`
       : `http://localhost:8000/books/${id}`;
 
-    const res = await fetch(apiUrl, { cache: "no-store" });
+    const res = await fetch(apiUrl, {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
     if (res.ok) {
       book = await res.json();
     }
@@ -92,8 +98,8 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
               <div className="my-auto flex items-center justify-center py-6 sm:py-8">
                 <div className="relative aspect-3/4 w-full max-w-65 overflow-hidden rounded-2xl bg-white shadow-lg sm:max-w-70">
                   <Image
-                  width={300}
-                  height={300}
+                    width={300}
+                    height={300}
                     src={book.coverImage || "/placeholder-book.jpg"}
                     alt={book.title}
                     className="h-full w-full object-cover"
@@ -115,7 +121,8 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
                   </p>
 
                   <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
-                    Available: {book.availableCopies} of {book.totalCopies} Copies
+                    Available: {book.availableCopies} of {book.totalCopies}{" "}
+                    Copies
                   </span>
                 </div>
 
@@ -165,10 +172,10 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
               </div>
 
               {/* Active Checkout Warning Banner */}
-            
+
               {/* borrow book dialog */}
-          
-              <BorrowBookDialog book={book}/>
+
+              <BorrowBookDialog book={book} />
             </div>
           </div>
         </div>

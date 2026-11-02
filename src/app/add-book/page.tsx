@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useBooks } from "@/context/BookContext";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const CATEGORIES = ["Fiction", "Science", "History", "Kids", "Others"];
 
@@ -49,10 +50,15 @@ export default function AddBookPage() {
   
 
     setIsSubmitting(true);
+
+    const jwtToken = await getTokenFromClient();
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+           "Content-Type": "application/json" 
+          },
         body: JSON.stringify(newBook),
       });
 

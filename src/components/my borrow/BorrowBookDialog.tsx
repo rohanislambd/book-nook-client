@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Book } from "@/types/type";
-import { BookmarkCheck, Bookmark, X, Info, AArrowDown } from "lucide-react";
+import { BookmarkCheck, Bookmark, X, Info } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import Image from "next/image";
