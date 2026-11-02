@@ -9,11 +9,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Book } from "@/types/type";
-import { BookmarkCheck, Bookmark, X, Info } from "lucide-react";
+import { BookmarkCheck, Bookmark, X, Info, AArrowDown } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 interface BorrowBookDialogProps {
   book: Book;
@@ -23,13 +24,17 @@ interface BorrowBookDialogProps {
 const BorrowBookDialog = ({ book, trigger }: BorrowBookDialogProps) => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-const [isAlreadyBorrowed, setIsAlreadyBorrowed] = useState(false);
-const [isChecking, setIsChecking] = useState(true);
+  const [isAlreadyBorrowed, setIsAlreadyBorrowed] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  const isOutOfStock = Number(book.availableCopies ?? 0) <= 0;
 
   const { data: session } = authClient.useSession();
   const router = useRouter();
 
   const user = session?.user;
+
+  const token = getTokenFromClient();
 
   // Borrower details from session or defaults matching the design
   const borrowerName = user?.name || "Eleanor Vance";
@@ -46,31 +51,58 @@ const [isChecking, setIsChecking] = useState(true);
 
 
   // Check if the user has already borrowed this book when the page loads
-   useEffect(()=>{
-      const checkBorrow = async () =>{
-        try{
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/borrows/check?bookId=${book._id}&borrowerEmail=${user?.email}`);
-          const borrowData = await res.json();
-          setIsAlreadyBorrowed(borrowData.alreadyBorrowed)
-        }catch(error){
-          console.log(error);
-        }finally{
-            setIsChecking(false);
+useEffect(() => {
+  const checkBorrow = async () => {
+    try {
+      const jwtToken = await token;
 
+      if (!jwtToken) return;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/borrows/check?bookId=${book._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
         }
-      }
-      if(user?.email){
-        checkBorrow()
-      }
-   },[book._id, user?.email])
+      );
 
- // Check duplicate borrow and available copies before opening the borrow modal
-   const handleBorrowClick = async () => {
-   if (isChecking) return;
+      const borrowData = await res.json();
+      setIsAlreadyBorrowed(borrowData.alreadyBorrowed);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  checkBorrow();
+}, [book._id, token]);
+
+  // Check duplicate borrow and available copies before opening the borrow modal
+const handleBorrowClick = async () => {
+  if (isChecking) return;
+
+  if (isOutOfStock) {
+    toast.error("This book is currently not available!");
+    return;
+  }
 
   try {
+    const jwtToken = await token;
+
+    if (!jwtToken) {
+      toast.error("Please login first!");
+      return;
+    }
+
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/borrows/check?bookId=${book._id}&borrowerEmail=${user?.email}`
+      `${process.env.NEXT_PUBLIC_API_URL}/borrows/check?bookId=${book._id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }
     );
 
     const borrowData = await res.json();
@@ -86,8 +118,6 @@ const [isChecking, setIsChecking] = useState(true);
     toast.error("Something went wrong!");
   }
 };
-
-
   // POST borrow API call to save the borrowed book
   const handleConfirmBorrow = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,7 +125,7 @@ const [isChecking, setIsChecking] = useState(true);
 
     const formData = new FormData(e.currentTarget);
     const returnDate = formData.get("returnDate") as string;
-
+     const jwtToken = await token;
     try {
       const borrowPayload = {
         bookId: book._id,
@@ -113,7 +143,10 @@ const [isChecking, setIsChecking] = useState(true);
         `${process.env.NEXT_PUBLIC_API_URL || ""}/borrows`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+             "Content-Type": "application/json" ,
+              Authorization: `Bearer ${jwtToken}`,
+            },
           body: JSON.stringify(borrowPayload),
         },
       );
@@ -166,13 +199,41 @@ const [isChecking, setIsChecking] = useState(true);
         <button
           type="button"
           onClick={handleBorrowClick}
-          
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#133826] py-3.5 px-6 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#18442e]"
         >
           <BookmarkCheck className="size-4" />
           Borrow This Book (Test Double-Borrow Guard)
         </button>
       </div>
+    );
+  }
+
+  // If the copies are 0, disable the Borrow button and show "Not Available"
+  if (isOutOfStock) {
+    return trigger ? (
+      React.isValidElement(trigger) ? (
+        React.cloneElement(
+          trigger as React.ReactElement<{
+            disabled?: boolean;
+            children?: React.ReactNode;
+          }>,
+          {
+            disabled: true,
+            children: "Not Available",
+          },
+        )
+      ) : (
+        trigger
+      )
+    ) : (
+      <button
+        type="button"
+        disabled
+        className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-stone-200 py-3.5 px-6 text-sm font-semibold text-stone-500 shadow-xs"
+      >
+        <Bookmark className="size-4" />
+        Not Available
+      </button>
     );
   }
 
@@ -332,10 +393,14 @@ const [isChecking, setIsChecking] = useState(true);
             />
             <button
               type="submit"
-              disabled={isSubmitting || (book.availableCopies ?? 0) <= 0}
+              disabled={isSubmitting || isOutOfStock}
               className="h-11 w-full cursor-pointer rounded-xl bg-[#1a3a2a] text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#132c1f] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSubmitting ? "Borrowing..." : "Confirm Borrow"}
+              {isSubmitting
+                ? "Borrowing..."
+                : isOutOfStock
+                  ? "Not Available"
+                  : "Confirm Borrow"}
             </button>
           </div>
         </form>

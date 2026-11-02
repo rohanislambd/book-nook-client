@@ -1,4 +1,4 @@
-import { getTokenFromServer } from "@/lib/src/lib/getTokenFromServer";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
