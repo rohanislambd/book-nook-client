@@ -30,9 +30,7 @@ const NewArrivals = async () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8 flex flex-col items-center text-center sm:mb-12 sm:items-start sm:text-left">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#c26d24] sm:text-sm">
-            Fresh from the shelves
-          </span>
+         
           <h2 className="font-heading mt-1 text-3xl font-bold tracking-tight text-[#1a3a2a] sm:text-4xl lg:text-5xl">
             New Arrivals
           </h2>
