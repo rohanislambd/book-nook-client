@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import {  PlusCircle, Pencil, Trash2 } from "lucide-react";
 import { Book } from "@/types/type";
+import MyBookEditDialog from "@/components/mybooks/MyBookEditDialog";
 
 
 
@@ -27,9 +28,11 @@ try {
 
   const data = await res.json();
   books = Array.isArray(data) ? data : [];
+    
 } catch (error) {
   console.error("Error fetching books:", error);
   // books safely defaults to []
+
 };
 
   const formatDate = (dateVal?: string | Date) => {
@@ -170,13 +173,8 @@ try {
                       {/* ACTIONS Cell */}
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-2xs transition-colors hover:bg-stone-50 hover:text-stone-900 cursor-pointer"
-                          >
-                            <Pencil className="size-3.5 text-stone-600" />
-                            <span>Edit</span>
-                          </button>
+                          {/* edit my book  */}
+                            <MyBookEditDialog book={book}/>
 
                           <button
                             type="button"
