@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { ChevronLeft, Info, Bookmark } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Book } from "@/types/type";
+import BorrowBookDialog from "@/components/my borrow/BorrowBookDialog";
+import Image from "next/image";
 
 interface BookDetailProps {
   params: Promise<{
@@ -88,8 +90,10 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
 
               {/* Book Cover Container */}
               <div className="my-auto flex items-center justify-center py-6 sm:py-8">
-                <div className="relative aspect-[3/4] w-full max-w-[260px] overflow-hidden rounded-2xl bg-white shadow-lg sm:max-w-[280px]">
-                  <img
+                <div className="relative aspect-3/4 w-full max-w-65 overflow-hidden rounded-2xl bg-white shadow-lg sm:max-w-70">
+                  <Image
+                  width={300}
+                  height={300}
                     src={book.coverImage || "/placeholder-book.jpg"}
                     alt={book.title}
                     className="h-full w-full object-cover"
@@ -110,19 +114,19 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
                     WRITTEN BY {book.author}
                   </p>
 
-                  <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+                  <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
                     Available: {book.availableCopies} of {book.totalCopies} Copies
                   </span>
                 </div>
 
                 {/* Title */}
-                <h1 className="font-heading mt-3 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl lg:text-4xl">
+                <h1 className="font-heading  mt-3 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl lg:text-4xl">
                   {book.title}
                 </h1>
               </div>
 
               {/* Synopsis & Overview */}
-              <div className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:p-6 shadow-2xs">
+              <div className="rounded-2xl bg-[#FAF8F5] border font-semibold border-stone-200/80  p-5 sm:p-6 shadow-2xs">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
                   SYNOPSIS &amp; OVERVIEW
                 </p>
@@ -132,9 +136,9 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
               </div>
 
               {/* Contributor & Catalog Info Grid */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 ">
                 {/* Contributed By */}
-                <div className="rounded-2xl border border-stone-200/80 bg-white p-4.5 shadow-2xs">
+                <div className="rounded-2xl border border-stone-200/80 bg-[#FAF8F5] p-4.5 shadow-2xs">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
                     CONTRIBUTED BY
                   </p>
@@ -147,7 +151,7 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
                 </div>
 
                 {/* Catalog Date & Status */}
-                <div className="rounded-2xl border border-stone-200/80 bg-white p-4.5 shadow-2xs">
+                <div className="rounded-2xl border border-stone-200/80 bg-[#FAF8F5] p-4.5 shadow-2xs">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
                     CATALOG DATE &amp; STATUS
                   </p>
@@ -162,14 +166,9 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
 
               {/* Active Checkout Warning Banner */}
             
-              {/* Action Button */}
-              <button
-                type="button"
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#1a3a2a] py-3.5 px-6 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#132c1f]"
-              >
-                <Bookmark className="size-4" />
-                Borrow This Book 
-              </button>
+              {/* borrow book dialog */}
+          
+              <BorrowBookDialog book={book}/>
             </div>
           </div>
         </div>
