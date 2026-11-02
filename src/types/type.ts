@@ -23,7 +23,23 @@ export interface Book {
 export interface BookContextType {
   books: Book[];
   allBooksCount: number;
+  myBorrowsCount: number;
   loading: boolean;
   setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
   refreshBooks: () => Promise<void>;
+  refreshBorrows: () => Promise<void>;
+}
+
+export interface BorrowRecord {
+  _id?: string;
+  bookId: string;
+  bookTitle: string;
+  bookCover: string;
+  author: string;
+  category: string;
+  borrowerName?: string;
+  borrowerEmail?: string;
+  borrowDate: string;
+  returnDate: string;
+  returned?: boolean;
 }

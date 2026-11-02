@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, RotateCw } from "lucide-react";
 import BookCard from "@/components/books/BookCard";
 import { useBooks } from "@/context/BookContext";
 
 const CATEGORIES = ["All", "Fiction", "Science", "History", "Kids", "Others"];
 
 export default function AllBookPage() {
-  const { books, loading } = useBooks();
+  const { books, loading, refreshBooks } = useBooks();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showOnlyAvailable, setShowOnlyAvailable] = useState<boolean>(false);
+
+  // Automatically refresh books when navigating to or loading this page
+  useEffect(() => {
+    refreshBooks();
+  }, [refreshBooks]);
 
   // Filter books based on category, search query, and availability
   const filteredBooks = books.filter((book) => {
@@ -47,16 +52,28 @@ export default function AllBookPage() {
           </p>
         </div>
 
-        {/* Search Input */}
-        <div className="relative w-full sm:w-80">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by book title or author..."
-            className="w-full rounded-xl border border-stone-200 bg-white py-2.5 pl-10 pr-4 text-sm text-stone-800 placeholder-stone-400 shadow-2xs focus:border-[#1a3a2a] focus:outline-none focus:ring-1 focus:ring-[#1a3a2a]"
-          />
+        {/* Search & Refresh Section */}
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <div className="relative w-full sm:w-80">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by book title or author..."
+              className="w-full rounded-xl border border-stone-200 bg-white py-2.5 pl-10 pr-4 text-sm text-stone-800 placeholder-stone-400 shadow-2xs focus:border-[#1a3a2a] focus:outline-none focus:ring-1 focus:ring-[#1a3a2a]"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => refreshBooks()}
+            disabled={loading}
+            title="Refresh library catalog"
+            className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-600 shadow-2xs transition-colors hover:bg-stone-50 hover:text-[#1a3a2a] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <RotateCw className={`size-4 ${loading ? "animate-spin text-[#1a3a2a]" : ""}`} />
+          </button>
         </div>
       </div>
 

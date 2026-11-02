@@ -70,16 +70,15 @@ const Navbar = () => {
 
 
   const isAuthenticated = user;
-  const { allBooksCount, books } = useBooks();
+  const { allBooksCount, myBorrowsCount, books } = useBooks();
 
   // Books contributed by current user (matching /my-book page)
-
   type TBook = {
-  userEmail?: string;
-  contributor?: {
-    email?: string;
+    userEmail?: string;
+    contributor?: {
+      email?: string;
+    };
   };
-};
 
   const myBooksCount = books.filter(
     (b: TBook) =>
@@ -113,14 +112,13 @@ const Navbar = () => {
       href: "/my-borrows",
       label: "My Borows",
       icon: SaveCheck,
-      count: 100,
+      count: myBorrowsCount,
       requireAuth: true,
     },
   ];
 
   // 💡 Derive counts from navLinks (single source of truth)
-  const myBookCount    = navLinks.find((l) => l.href === "/my-book")?.count;
-  const myBorrowsCount = navLinks.find((l) => l.href === "/my-borrows")?.count;
+  const myBookCount = navLinks.find((l) => l.href === "/my-book")?.count;
 
   // 💡 Session filter
   const visibleLinks = navLinks.filter((link) => {

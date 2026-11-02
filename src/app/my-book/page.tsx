@@ -8,8 +8,11 @@ import { Book } from "@/types/type";
 
 
 const MyBookPage = async () => {
-  const token = await getTokenFromServer();
+  let books: Book[] = [];
+ 
 
+try {
+  const token = await getTokenFromServer();
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-book`, {
     method: "GET",
     headers: {
@@ -18,8 +21,16 @@ const MyBookPage = async () => {
     cache: "no-store",
   });
 
+  if (!res.ok) {
+    throw new Error(`Failed to fetch books: ${res.status} ${res.statusText}`);
+  }
+
   const data = await res.json();
-  const books: Book[] = Array.isArray(data) ? data : [];
+  books = Array.isArray(data) ? data : [];
+} catch (error) {
+  console.error("Error fetching books:", error);
+  // books safely defaults to []
+};
 
   const formatDate = (dateVal?: string | Date) => {
     if (!dateVal) return "N/A";

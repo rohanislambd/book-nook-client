@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getTokenFromClient } from "@/lib/getTokenFromClient";
+import { useBooks } from "@/context/BookContext";
 
 interface BorrowBookDialogProps {
   book: Book;
@@ -31,6 +32,7 @@ const BorrowBookDialog = ({ book, trigger }: BorrowBookDialogProps) => {
 
   const { data: session } = authClient.useSession();
   const router = useRouter();
+  const { refreshBorrows, refreshBooks } = useBooks();
 
   const user = session?.user;
 
@@ -158,9 +160,11 @@ const handleBorrowClick = async () => {
         toast.error(result.message || "Failed to borrow book!");
         return;
       }
-      setIsAlreadyBorrowed(true)
+      setIsAlreadyBorrowed(true);
       toast.success("Book borrowed successfully!");
-     
+      refreshBorrows();
+      refreshBooks();
+
       setOpen(false);
       router.refresh();
 
