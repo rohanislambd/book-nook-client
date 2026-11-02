@@ -263,7 +263,7 @@ export default function Banner() {
                     </p>
 
                     {/* Inner Wing Spotlight Box */}
-                    <div className="mb-5 rounded-xl border border-white/10 bg-[#132d1e]/60 p-3.5">
+                    <div className="mb-5 rounded-xl border border-white/10  p-3.5">
                       <div className="mb-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
                         <span className="text-white/50">
                           {slide.spotlightLabel}
