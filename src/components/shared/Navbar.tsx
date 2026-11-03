@@ -145,7 +145,7 @@ const Navbar = () => {
         onSuccess: () => {
           closeMobile();
           toast.success("Logged out successfully!");
-          router.push("/login"); // redirect to login page
+          router.push("/"); 
         },
       },
     });
