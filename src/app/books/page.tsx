@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { Search, RotateCw } from "lucide-react";
 import BookCard from "@/components/books/BookCard";
 import { useBooks } from "@/context/BookContext";
-
-
-
+import { motion } from "framer-motion";
 
 const CATEGORIES = ["All", "Fiction", "Science", "History", "Kids", "Others"];
 
@@ -68,7 +66,8 @@ export default function AllBookPage() {
             />
           </div>
 
-          <button
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             type="button"
             onClick={() => refreshBooks()}
             disabled={loading}
@@ -76,7 +75,7 @@ export default function AllBookPage() {
             className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-600 shadow-2xs transition-colors hover:bg-stone-50 hover:text-[#1a3a2a] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RotateCw className={`size-4 ${loading ? "animate-spin text-[#1a3a2a]" : ""}`} />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -90,17 +89,18 @@ export default function AllBookPage() {
           {CATEGORIES.map((category) => {
             const isActive = selectedCategory === category;
             return (
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors sm:text-sm cursor-pointer ${
+                className={`rounded-lg px-4 py-1.5 text-xs font-semibold transition-all sm:text-sm cursor-pointer ${
                   isActive
-                    ? "bg-[#1a3a2a] text-white"
+                    ? "bg-[#1a3a2a] text-white shadow-xs"
                     : "border border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
                 }`}
               >
                 {category}
-              </button>
+              </motion.button>
             );
           })}
         </div>
@@ -142,8 +142,8 @@ export default function AllBookPage() {
         </div>
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredBooks.map((book) => (
-            <BookCard key={book._id} book={book} />
+          {filteredBooks.map((book, index) => (
+            <BookCard key={book._id} book={book} index={index} />
           ))}
         </div>
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -30,6 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import toast from "react-hot-toast";
 import { useBooks } from "@/context/BookContext";
 import ProfileDialog from "../profile/ProfileDialog";
+import { motion, AnimatePresence } from "framer-motion";
 
 /* ─────────────────── nav link definitions ─────────────────── */
 
@@ -92,6 +93,17 @@ const Navbar = () => {
 
   const closeMobile = () => setMobileOpen(false);
 
+  // Close mobile menu on desktop resize (>= 1024px)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // 💡 Define nav links with dynamic count from context
   const navLinks: NavLink[] = [
     { href: "/", label: "Home", icon: Compass },
@@ -145,8 +157,8 @@ const Navbar = () => {
         {/* Logo — always visible */}
         <Logo />
 
-        {/* ── Desktop nav links (md+) ── */}
-        <ul className="hidden md:flex items-center gap-1 xl:gap-2">
+        {/* ── Desktop nav links (lg+) ── */}
+        <ul className="hidden lg:flex items-center gap-1 xl:gap-2">
           {visibleLinks.map(({ href, label, icon: Icon, count }) => {
             const active = pathname === href;
             return (
@@ -180,8 +192,8 @@ const Navbar = () => {
           })}
         </ul>
 
-        {/* ── Desktop auth buttons (md+) ── */}
-        <div className="hidden md:flex items-center gap-2 shrink-0">
+        {/* ── Desktop auth buttons (lg+) ── */}
+        <div className="hidden lg:flex items-center gap-2 shrink-0">
           {isAuthenticated ? (
             <Popover>
               <PopoverTrigger
@@ -298,8 +310,8 @@ const Navbar = () => {
 
 
          
-        {/* ── Mobile profile & hamburger (< md) ── */}
-        <div className="flex items-center gap-2.5 md:hidden z-10">
+        {/* ── Mobile profile & hamburger (< lg) ── */}
+        <div className="flex items-center gap-2.5 lg:hidden z-10">
           {isAuthenticated && (
             <ProfileDialog
               myBookCount={myBookCount}
@@ -344,86 +356,94 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* ── Mobile Dropdown Menu (< md) ── */}
-      {mobileOpen && (
-        <div className=" md:hidden  border-t border-border bg-[#FFFFFF] px-6 py-4 pb-6 shadow-sm  ">
-          <nav className="flex flex-col space-y-2">
-            {visibleLinks.map(({ href, label, count }) => {
-              const active = pathname === href;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={closeMobile}
-                  className={cn(
-                    "px-4 py-3 text-sm font-semibold rounded-xl transition-colors",
-                    active
-                      ? "bg-[#1a3a2a] text-white"
-                      : "text-foreground hover:bg-black/5",
-                  )}
-                >
-                  {label}
-                  {count !== undefined && ` (${count})`}
-                </Link>
-              );
-            })}
-          </nav>
+      {/* ── Mobile Dropdown Menu (< lg) ── */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="lg:hidden border-t border-border bg-[#FFFFFF] px-6 py-4 pb-6 shadow-sm overflow-hidden"
+          >
+            <nav className="flex flex-col space-y-2">
+              {visibleLinks.map(({ href, label, count }) => {
+                const active = pathname === href;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={closeMobile}
+                    className={cn(
+                      "px-4 py-3 text-sm font-semibold rounded-xl transition-colors",
+                      active
+                        ? "bg-[#1a3a2a] text-white"
+                        : "text-foreground hover:bg-black/5",
+                    )}
+                  >
+                    {label}
+                    {count !== undefined && ` (${count})`}
+                  </Link>
+                );
+              })}
+            </nav>
 
-          <div className="mt-4 border-t border-border pt-4">
-            {isAuthenticated ? (
-              /* ── Mobile user card ── */
-              <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#F5F3F0] px-4 py-3">
-                {/* Avatar + Info */}
-                <div className="flex items-center gap-3 min-w-0">
-                  <Avatar className="size-11 shrink-0 ring-2 ring-[#1a3a2a]/20">
-                    <AvatarImage src={user?.image ?? ""} />
-                    <AvatarFallback className="bg-[#1a3a2a] text-amber-400 font-bold text-sm">
-                      {user?.name?.charAt(0).toUpperCase() ?? "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-bold text-foreground truncate">
-                      {user?.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground truncate">
-                      {user?.email}
-                    </span>
+            <div className="mt-4 border-t border-border pt-4">
+              {isAuthenticated ? (
+                /* ── Mobile user card ── */
+                <div className="flex items-center justify-between gap-3 rounded-2xl bg-[#F5F3F0] px-4 py-3">
+                  {/* Avatar + Info */}
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Avatar className="size-11 shrink-0 ring-2 ring-[#1a3a2a]/20">
+                      <AvatarImage src={user?.image ?? ""} />
+                      <AvatarFallback className="bg-[#1a3a2a] text-amber-400 font-bold text-sm">
+                        {user?.name?.charAt(0).toUpperCase() ?? "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-bold text-foreground truncate">
+                        {user?.name}
+                      </span>
+                      <span className="text-xs text-muted-foreground truncate">
+                        {user?.email}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Logout */}
-                <button
-                  // () => { authClient.signOut(); ;
-                  onClick={handleSignOut}
-                  className="shrink-0 text-sm font-semibold text-red-500 hover:text-red-600 transition-colors"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col w-full gap-3">
-                <Link href="/login">
-                  <Button
-                    variant="outline"
-                    className="flex-1 rounded-xl border-[#1a3a2a] text-[#1a3a2a] font-semibold hover:bg-[#1a3a2a]/5 w-full"
-                    onClick={closeMobile}
+                  {/* Logout */}
+                  <button
+                    // () => { authClient.signOut(); ;
+                    onClick={handleSignOut}
+                    className="shrink-0 text-sm font-semibold text-red-500 hover:text-red-600 transition-colors"
                   >
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/register">
-                  <Button
-                    className="flex-1 rounded-xl bg-[#1a3a2a] text-white font-semibold hover:bg-[#1a3a2a]/90 w-full py-2"
-                    onClick={closeMobile}
-                  >
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col w-full gap-3">
+                  <Link href="/login">
+                    <Button
+                      variant="outline"
+                      className="flex-1 rounded-xl border-[#1a3a2a] text-[#1a3a2a] font-semibold hover:bg-[#1a3a2a]/5 w-full"
+                      onClick={closeMobile}
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button
+                      className="flex-1 rounded-xl bg-[#1a3a2a] text-white font-semibold hover:bg-[#1a3a2a]/90 w-full py-2"
+                      onClick={closeMobile}
+                    >
+                      Register
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

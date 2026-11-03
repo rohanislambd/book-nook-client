@@ -1,18 +1,32 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Book } from "@/types/type";
 import Image from "next/image";
-
+import { motion } from "framer-motion";
 
 interface BookCardProps {
   book: Book;
+  index?: number;
 }
 
-export default function BookCard({ book }: BookCardProps) {
+export default function BookCard({ book, index = 0 }: BookCardProps) {
   const isAvailable = (book.availableCopies ?? 0) > 0;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:border-stone-300">
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{
+        duration: 0.4,
+        delay: Math.min((index % 6) * 0.08, 0.4),
+        ease: "easeOut",
+      }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl hover:border-stone-300"
+    >
       {/* Cover Image Container */}
       <Link
         href={`/books/${book._id}`}
@@ -79,15 +93,17 @@ export default function BookCard({ book }: BookCardProps) {
             </span>
           </p>
 
-          <Link
-            href={`/books/${book._id}`}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#1a3a2a] px-3.5 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#142e21] group-hover:bg-[#142e21]"
-          >
-            View Details
-            <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </Link>
+          <motion.div whileTap={{ scale: 0.95 }}>
+            <Link
+              href={`/books/${book._id}`}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#1a3a2a] px-3.5 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#142e21] group-hover:bg-[#142e21]"
+            >
+              View Details
+              <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

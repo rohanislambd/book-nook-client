@@ -51,7 +51,7 @@ const ProfileDialog = ({ myBookCount, trigger }: ProfileDialogProps) => {
         showCloseButton={false}
         className="w-full max-w-[390px] rounded-3xl border border-stone-200/90 bg-[#FAF8F5] p-6 text-foreground shadow-2xl outline-none gap-0"
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
           {/* Header */}
           <div className="flex items-center justify-between pb-3">
             <DialogTitle className="font-heading text-xl font-bold text-[#1a3a2a]">
