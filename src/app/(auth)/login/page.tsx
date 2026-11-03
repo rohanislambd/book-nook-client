@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect, useRef } from "react";
 import Link from "next/link";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,14 @@ function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const toastShown = useRef(false);
+
+  useEffect(() => {
+    if (searchParams.get("toast") === "book_details" && !toastShown.current) {
+      toastShown.current = true;
+      toast.error("Please log in first to view the book details");
+    }
+  }, [searchParams]);
 
   const handleGoogleLogin = async () => {
     const { error } = await authClient.signIn.social({

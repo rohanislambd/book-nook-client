@@ -132,7 +132,7 @@ const Navbar = () => {
       fetchOptions: {
         onSuccess: () => {
           closeMobile();
-          toast.success("logout sesefull");
+          toast.success("Logged out successfully!");
           router.push("/login"); // redirect to login page
         },
       },

@@ -3,11 +3,17 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
 export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Allow public access to catalog page /books
+  if (pathname === "/books") {
+    return NextResponse.next();
+  }
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname === "/login" || pathname === "/register";
 
   // If user is already logged in, redirect away from login & register pages
@@ -21,6 +27,10 @@ export async function proxy(request: NextRequest) {
     const requestedPath = request.nextUrl.pathname + request.nextUrl.search;
     loginUrl.searchParams.set("callbackUrl", requestedPath);
 
+    if (pathname.startsWith("/books/")) {
+      loginUrl.searchParams.set("toast", "book_details");
+    }
+
     return NextResponse.redirect(loginUrl);
   }
 
@@ -32,7 +42,7 @@ export const config = {
     "/add-book",
     "/my-book",
     "/my-borrows",
-    "/books/:path",
+    "/books/:path*",
     "/login",
     "/register",
   ],
