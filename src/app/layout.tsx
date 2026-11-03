@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { BookProvider } from "@/context/BookContext";
@@ -34,9 +35,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BookProvider>
           <Navbar />
 
-          <main className="bg-[#FAF8F5]">
+          <main className="flex-1 bg-[#FAF8F5]">
             {children}
           </main>
+
+          <Footer />
         </BookProvider>
       </body>
     </html>
