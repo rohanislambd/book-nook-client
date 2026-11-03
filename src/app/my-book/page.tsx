@@ -2,10 +2,17 @@ import { getTokenFromServer } from "@/lib/getTokenFromServer";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import {  PlusCircle, Pencil, Trash2 } from "lucide-react";
+import { PlusCircle, Pencil, Trash2 } from "lucide-react";
 import { Book } from "@/types/type";
 import MyBookEditDialog from "@/components/mybooks/MyBookEditDialog";
 import MyBookDeleteDialog from "@/components/mybooks/MyBookDeleteDialog";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Books | BookNook",
+  description:
+    "Manage the books you have contributed to BookNook community library. Update details, manage available copies, or remove volumes.",
+};
 
 
 

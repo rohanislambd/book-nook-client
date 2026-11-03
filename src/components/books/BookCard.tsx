@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Book } from "@/types/type";
 import Image from "next/image";
 
+
 interface BookCardProps {
   book: Book;
 }

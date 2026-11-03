@@ -4,6 +4,13 @@ import { getTokenFromServer } from "@/lib/getTokenFromServer";
 import { BorrowRecord } from "@/types/type";
 import ReturnBookButton from "@/components/my borrow/ReturnBookButton";
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Borrows | BookNook",
+  description:
+    "Track and manage your borrowed books from BookNook community library. View scheduled return dates and return volumes with one click.",
+};
 
 const MyBorrowPage = async () => {
   let myborrowData: BorrowRecord[] = [];

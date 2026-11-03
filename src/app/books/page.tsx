@@ -5,6 +5,9 @@ import { Search, RotateCw } from "lucide-react";
 import BookCard from "@/components/books/BookCard";
 import { useBooks } from "@/context/BookContext";
 
+
+
+
 const CATEGORIES = ["All", "Fiction", "Science", "History", "Kids", "Others"];
 
 export default function AllBookPage() {
