@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { Search, Bookmark, BookOpen, HeartHandshake } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface StepItem {
   step: string;
@@ -46,10 +49,19 @@ const steps: StepItem[] = [
 
 const BorrowingWorks = () => {
   return (
-    <section className="w-full bg-[#F2EFE9] py-16 sm:py-20 md:py-24">
+    <section className="w-full bg-[#FAF8F5] py-16 sm:py-20 md:py-24 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="flex flex-col items-center text-center"
+        >
+          <span className="text-xs font-bold uppercase tracking-widest text-[#C26D24] sm:text-sm">
+            Simple Circular Library
+          </span>
           <h2 className="font-heading mt-2 text-3xl font-bold tracking-tight text-[#1a3a2a] sm:text-4xl md:text-5xl">
             How Borrowing Works
           </h2>
@@ -57,21 +69,36 @@ const BorrowingWorks = () => {
             We stripped away complex library bureaucracy so you can focus on
             reading and sharing great literature.
           </p>
-        </div>
+        </motion.div>
 
         {/* 4 Steps Grid */}
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 sm:mt-16">
-          {steps.map(({ step, icon: Icon, title, description, iconColor }) => (
-            <div
+          {steps.map(({ step, icon: Icon, title, description, iconColor }, index) => (
+            <motion.div
               key={step}
-              className="group flex flex-col justify-between rounded-3xl border border-stone-200/90 bg-white p-7 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.45,
+                delay: index * 0.12,
+                ease: "easeOut",
+              }}
+              whileHover={{
+                y: -6,
+                transition: { duration: 0.2 },
+              }}
+              className="group flex flex-col justify-between rounded-3xl border border-stone-200/90 bg-white p-7 shadow-xs hover:shadow-md transition-shadow"
             >
               <div>
                 {/* Card Top: Icon & Step Number */}
                 <div className="flex items-center justify-between">
-                  <div className="flex size-11 items-center justify-center rounded-2xl border border-stone-200/80 bg-stone-50/60 transition-colors duration-200 group-hover:border-stone-300">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="flex size-11 items-center justify-center rounded-2xl border border-stone-200/80 bg-stone-50/60 transition-colors duration-200 group-hover:border-stone-300"
+                  >
                     <Icon className={`size-5 ${iconColor}`} />
-                  </div>
+                  </motion.div>
                   <span className="font-heading text-2xl font-bold text-stone-300 select-none">
                     {step}
                   </span>
@@ -87,7 +114,7 @@ const BorrowingWorks = () => {
                   {description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

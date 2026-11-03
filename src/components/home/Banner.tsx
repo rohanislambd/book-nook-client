@@ -6,6 +6,7 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperClass } from "swiper/types";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Sparkles, PlusCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -140,25 +141,49 @@ export default function Banner() {
                 {/* ── Left content ── */}
                 <div className="relative z-10 flex min-w-0 flex-1 flex-col justify-center">
                   {/* Badge */}
-                  <div className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c8923a]/40 bg-[#c8923a]/15 px-3.5 py-1">
+                  <motion.div
+                    key={`badge-${activeIndex}-${slide.id}`}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c8923a]/40 bg-[#c8923a]/15 px-3.5 py-1"
+                  >
                     <Sparkles className="h-3 w-3 shrink-0 text-[#e09a40]" />
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#e09a40]">
                       {slide.badge}
                     </span>
-                  </div>
+                  </motion.div>
 
                   {/* Serif Heading */}
-                  <h1 className="mb-3 font-heading  text-2xl font-bold leading-[1.15] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-[2.5rem] xl:text-[2.75rem]">
+                  <motion.h1
+                    key={`title-${activeIndex}-${slide.id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="mb-3 font-heading text-2xl font-bold leading-[1.15] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-[2.5rem] xl:text-[2.75rem]"
+                  >
                     {slide.title}
-                  </h1>
+                  </motion.h1>
 
                   {/* Description */}
-                  <p className="mb-6 max-w-sm text-sm leading-relaxed text-white/75 sm:max-w-md sm:text-base lg:mb-8">
+                  <motion.p
+                    key={`desc-${activeIndex}-${slide.id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mb-6 max-w-sm text-sm leading-relaxed text-white/75 sm:max-w-md sm:text-base lg:mb-8"
+                  >
                     {slide.description}
-                  </p>
+                  </motion.p>
 
                   {/* CTA buttons */}
-                  <div className="flex flex-wrap items-center gap-3">
+                  <motion.div
+                    key={`cta-${activeIndex}-${slide.id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="flex flex-wrap items-center gap-3"
+                  >
                     <Link
                       href="/books"
                       className="inline-flex items-center gap-2 rounded-full bg-[#d97f2a] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#c5711f] sm:px-6 sm:py-3"
@@ -167,12 +192,12 @@ export default function Banner() {
                       <ChevronRight className="h-4 w-4" />
                     </Link>
                     <Link href="/add-book">
-                       <button className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6 sm:py-3">
-                      <PlusCircle className="h-4 w-4 text-[#e09a40]" />
-                      Contribute a Book
-                    </button>
+                      <button className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/15 sm:px-6 sm:py-3 cursor-pointer">
+                        <PlusCircle className="h-4 w-4 text-[#e09a40]" />
+                        Contribute a Book
+                      </button>
                     </Link>
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* ── Mobile-only compact info strip (below lg) ── */}
@@ -240,7 +265,13 @@ export default function Banner() {
                 </div>
 
                 {/* ── Right info card (lg+ only) ── */}
-                <div className="relative z-10 ml-6 hidden shrink-0 self-center lg:block xl:ml-10">
+                <motion.div
+                  key={`card-${activeIndex}-${slide.id}`}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.45, delay: 0.2 }}
+                  className="relative z-10 ml-6 hidden shrink-0 self-center lg:block xl:ml-10"
+                >
                   <div
                     className="flex w-72 flex-col rounded-2xl p-5 shadow-2xl backdrop-blur-md xl:w-80 xl:p-6"
                     style={{
@@ -323,7 +354,7 @@ export default function Banner() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </SwiperSlide>
           ))}

@@ -4,6 +4,8 @@ import { Book } from "@/types/type";
 import BorrowBookDialog from "@/components/my borrow/BorrowBookDialog";
 import Image from "next/image";
 import { getTokenFromServer } from "@/lib/getTokenFromServer";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface BookDetailProps {
   params: Promise<{
@@ -11,12 +13,9 @@ interface BookDetailProps {
   }>;
 }
 
-const BookDetailPage = async ({ params }: BookDetailProps) => {
-  const { id } = await params;
-
-  let book: Book | null = null;
-  const jwtToken = await getTokenFromServer();
+async function getBook(id: string): Promise<Book | null> {
   try {
+    const jwtToken = await getTokenFromServer();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL
       ? `${process.env.NEXT_PUBLIC_API_URL}/books/${id}`
       : `http://localhost:8000/books/${id}`;
@@ -27,34 +26,48 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
+
     if (res.ok) {
-      book = await res.json();
+      return await res.json();
     }
   } catch (error) {
     console.error("Error fetching book detail:", error);
   }
+  return null;
+}
 
-  // Fallback data to guarantee pixel-perfect UI if API is unavailable or returns 404
+export async function generateMetadata({
+  params,
+}: BookDetailProps): Promise<Metadata> {
+  const { id } = await params;
+  const book = await getBook(id);
+
   if (!book) {
-    book = {
-      _id: id,
-      title: "The Shadow of the Wind",
-      author: "Carlos Ruiz Zafón",
-      category: "Fiction",
-      totalCopies: 4,
-      availableCopies: 3,
-      coverImage:
-        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
-      description:
-        "Set in Barcelona in 1945, young Daniel Sempere is taken by his antiquarian book-dealer father to the secret Cemetery of Forgotten Books. There he discovers a volume that pulls him into a labyrinth of intrigue, doomed love, and historical mystery.",
-      contributor: {
-        name: "Eleanor Vance",
-        email: "eleanor@booknook.org",
-      },
-      userName: "Eleanor Vance",
-      userEmail: "eleanor@booknook.org",
-      createdAt: "2025-02-22T10:00:00.000Z",
+    return {
+      title: "Book Not Found | BookNook",
+      description: "The requested volume could not be found in our catalog.",
     };
+  }
+
+  return {
+    title: `${book.title} | BookNook`,
+    description: book.description
+      ? book.description.slice(0, 160)
+      : `Explore "${book.title}" by ${book.author} on BookNook.`,
+    openGraph: {
+      title: `${book.title} - ${book.author} | BookNook`,
+      description: book.description ? book.description.slice(0, 160) : undefined,
+      images: book.coverImage ? [book.coverImage] : [],
+    },
+  };
+}
+
+const BookDetailPage = async ({ params }: BookDetailProps) => {
+  const { id } = await params;
+  const book = await getBook(id);
+
+  if (!book) {
+    notFound();
   }
 
   const contributorName =
@@ -127,13 +140,13 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
                 </div>
 
                 {/* Title */}
-                <h1 className="font-heading  mt-3 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl lg:text-4xl">
+                <h1 className="font-heading mt-3 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl lg:text-4xl">
                   {book.title}
                 </h1>
               </div>
 
               {/* Synopsis & Overview */}
-              <div className="rounded-2xl bg-[#FAF8F5] border font-semibold border-stone-200/80  p-5 sm:p-6 shadow-2xs">
+              <div className="rounded-2xl bg-[#FAF8F5] border font-semibold border-stone-200/80 p-5 sm:p-6 shadow-2xs">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
                   SYNOPSIS &amp; OVERVIEW
                 </p>
@@ -143,7 +156,7 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
               </div>
 
               {/* Contributor & Catalog Info Grid */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 ">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* Contributed By */}
                 <div className="rounded-2xl border border-stone-200/80 bg-[#FAF8F5] p-4.5 shadow-2xs">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
@@ -171,10 +184,7 @@ const BookDetailPage = async ({ params }: BookDetailProps) => {
                 </div>
               </div>
 
-              {/* Active Checkout Warning Banner */}
-
               {/* borrow book dialog */}
-
               <BorrowBookDialog book={book} />
             </div>
           </div>

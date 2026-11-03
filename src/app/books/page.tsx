@@ -119,8 +119,17 @@ export default function AllBookPage() {
 
       {/* ── Books Grid ── */}
       {loading ? (
-        <div className="py-20 text-center text-sm text-stone-500">
-          Loading library catalog...
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="relative flex items-center justify-center">
+            <div className="size-12 animate-spin rounded-full border-3 border-stone-200 border-t-[#1a3a2a]" />
+            <RotateCw className="absolute size-5 text-[#1a3a2a] animate-spin" />
+          </div>
+          <p className="font-heading mt-4 text-base font-bold text-[#1a3a2a]">
+            Loading library catalog...
+          </p>
+          <p className="mt-1 text-xs text-stone-500">
+            Gathering community volumes and shelves
+          </p>
         </div>
       ) : filteredBooks.length === 0 ? (
         <div className="py-20 text-center">
