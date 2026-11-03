@@ -29,13 +29,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${fraunces.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-screen flex flex-col font-sans">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if(typeof window!=="undefined"&&"scrollRestoration" in window.history){window.history.scrollRestoration="manual";window.scrollTo(0,0);}`,
+          }}
+        />
         <Toaster />
 
         <BookProvider>
           <Navbar />
 
-          <main className="flex-1 bg-[#FAF8F5]">
+          <main className="flex-1 bg-[#FAF8F5] min-h-[calc(100vh-4rem)]">
             {children}
           </main>
 

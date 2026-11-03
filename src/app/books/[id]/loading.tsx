@@ -1,27 +1,22 @@
-"use client";
-
-import React, { useEffect } from "react";
+import React from "react";
 import { BookOpen } from "lucide-react";
 
 export default function BookDetailLoading() {
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }, []);
-
   return (
-    <div className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col items-center justify-center bg-[#FAF8F5] px-4 text-center">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-[#FAF8F5] px-4 py-16 text-center">
       <div className="relative flex items-center justify-center">
-        {/* Animated spinner ring */}
         <div className="size-16 animate-spin rounded-full border-4 border-stone-200 border-t-[#1a3a2a]" />
-        {/* Center book icon */}
-        <BookOpen className="absolute size-6 text-[#1a3a2a] animate-pulse" />
+        <BookOpen className="absolute size-7 text-[#1a3a2a] animate-pulse" />
       </div>
 
-      <p className="font-heading mt-5 text-lg font-bold text-[#1a3a2a]">
+      <h2 className="font-heading mt-6 text-xl font-bold tracking-tight text-[#1a3a2a] sm:text-2xl">
+        BookNook
+      </h2>
+      <p className="mt-1 text-sm font-semibold text-stone-700">
         Opening Volume...
       </p>
       <p className="mt-1 text-xs text-stone-500 max-w-xs">
-        Retrieving manuscript synopsis, contributor notes, and circulation copies.
+        Retrieving manuscript synopsis, contributor notes, and circulation copies
       </p>
     </div>
   );
