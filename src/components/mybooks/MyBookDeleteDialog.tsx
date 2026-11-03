@@ -82,7 +82,7 @@ const MyBookDeleteDialog = ({ book, trigger }: MyBookDeleteDialogProps) => {
         }
       />
 
-      <AlertDialogContent className="w-full max-w-[390px] rounded-3xl border border-stone-200/90 bg-[#FAF8F5] p-6 sm:p-7 text-foreground shadow-2xl outline-none gap-0">
+      <AlertDialogContent className="w-full max-w-[390px] max-h-[90vh] overflow-y-auto rounded-3xl border border-stone-200/90 bg-[#FAF8F5] p-6 sm:p-7 text-foreground shadow-2xl outline-none gap-0">
         <div className="flex flex-col items-center text-center">
           {/* Red Trash Icon container */}
           <div className="flex size-14 items-center justify-center rounded-2xl bg-[#FEE4E2]/70 text-[#D92D20]">

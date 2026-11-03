@@ -97,7 +97,7 @@ const MyBookEditDialog = ({ book, trigger }: MyBookEditDialogProps) => {
 
       <DialogContent
         showCloseButton={false}
-        className="w-full max-w-[440px] rounded-3xl border border-stone-200/90 bg-[#FAF8F5] p-6 text-foreground shadow-2xl outline-none gap-0"
+        className="w-full max-w-[440px] max-h-[90vh] overflow-y-auto rounded-3xl border border-stone-200/90 bg-[#FAF8F5] p-5 sm:p-6 text-foreground shadow-2xl outline-none gap-0"
       >
         <div className="flex flex-col">
           {/* Header */}

@@ -246,22 +246,36 @@ try {
                 </div>
 
                 {/* Actions for Mobile */}
-                <div className="mt-3.5 flex items-center justify-end gap-2.5 border-t border-stone-100 pt-3">
-                  <button
-                    type="button"
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white py-2 text-xs font-semibold text-stone-700 shadow-2xs transition-colors hover:bg-stone-50 cursor-pointer"
-                  >
-                    <Pencil className="size-3.5 text-stone-600" />
-                    <span>Edit</span>
-                  </button>
+                <div className="mt-3.5 flex items-center gap-2.5 border-t border-stone-100 pt-3">
+                  <div className="flex-1">
+                    <MyBookEditDialog
+                      book={book}
+                      trigger={
+                        <button
+                          type="button"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-200 bg-white py-2 text-xs font-semibold text-stone-700 shadow-2xs transition-colors hover:bg-stone-50 cursor-pointer"
+                        >
+                          <Pencil className="size-3.5 text-stone-600" />
+                          <span>Edit</span>
+                        </button>
+                      }
+                    />
+                  </div>
 
-                  <button
-                    type="button"
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50/50 py-2 text-xs font-semibold text-red-600 shadow-2xs transition-colors hover:bg-red-100/70 cursor-pointer"
-                  >
-                    <Trash2 className="size-3.5 text-red-500" />
-                    <span>Delete</span>
-                  </button>
+                  <div className="flex-1">
+                    <MyBookDeleteDialog
+                      book={book}
+                      trigger={
+                        <button
+                          type="button"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50/50 py-2 text-xs font-semibold text-red-600 shadow-2xs transition-colors hover:bg-red-100/70 cursor-pointer"
+                        >
+                          <Trash2 className="size-3.5 text-red-500" />
+                          <span>Delete</span>
+                        </button>
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             ))
